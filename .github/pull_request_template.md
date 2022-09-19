@@ -8,5 +8,5 @@
 
 ## CheckList
 
-- [] Local test pass
-- [] Local linters pass
+- [ ] Local test pass
+- [ ] Local linters pass
