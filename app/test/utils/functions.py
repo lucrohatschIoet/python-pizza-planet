@@ -35,3 +35,6 @@ def get_random_sequence(length: int = 10) -> str:
 
 def get_random_phone() -> str:
     return get_random_sequence(10)
+
+def get_random_volume(lower_bound: float, upper_bound: float) -> float:
+    return round(random.uniform(lower_bound, upper_bound), 2)
