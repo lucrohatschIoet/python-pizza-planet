@@ -20,6 +20,9 @@ migrate.init_app(flask_app, db)
 def test():
     return pytest.main(['-v', './app/test'])
 
+@manager.command('cover', with_appcontext=False)
+def cover():
+    return pytest.main(['--cov-config=.coveragerc', '--cov=app', 'app/test'])
 
 if __name__ == '__main__':
     manager()
