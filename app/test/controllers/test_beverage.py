@@ -13,7 +13,6 @@ def test_update(app, beverage: dict):
     created_beverage, _ = BeverageController.create(beverage)
     updated_fields = {
         'name': 'updated',
-        'volume': 350,
         'price': 10
     }
     updated_beverage, error = BeverageController.update({
