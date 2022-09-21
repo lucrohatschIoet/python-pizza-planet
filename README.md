@@ -2,7 +2,6 @@
 
 ![python-badge](https://img.shields.io/badge/python-%2314354C.svg?style=for-the-badge&logo=python&logoColor=white)
 
-![Coverage badge](https://raw.githubusercontent.com/py-cov-action/python-coverage-comment-action-v3-example/python-coverage-comment-action-data/badge.svg)
 
 This is an example software for a pizzeria that takes customizable orders.
 
@@ -113,4 +112,9 @@ ext install ritwickdey.LiveServer
 
 ```bash
 python3 manage.py test
+```
+- To chekout testing coverage
+
+```bash
+python3 manage.py cover
 ```
