@@ -1,8 +1,6 @@
 from datetime import datetime
-from urllib import response
 import pytest
 from statistics import mode
-from app.test.fixtures.ingredient import ingredient
 
 
 def __report_values(client, orders, order_uri):
@@ -11,12 +9,14 @@ def __report_values(client, orders, order_uri):
     beverages = []
     months = []
     for order in orders:
-        order_id = order['_id']
+        order = order
+        order_id = order.get('_id')
         order_detail = client.get(f'{order_uri}id/{order_id}')
-        clients.append(order_detail['client_name'])
+        order_detail = order_detail.json
+        clients.append(order_detail.get('client_name'))
         ingredients.append(ingredient['name'] for ingredient in order_detail['ingradient_detail'])
         beverages.append(beverage['name'] for beverage in order_detail['beverage_detail'])
-        months.append(datetime.strptime(order_detail['date'], '%Y-%m-%dT%H:%M:%S').month)
+        months.append(order_detail['date'].split("-")[1])
     
     result ={
         'most_requested_ingredient': {'name': mode(ingredients), 'requested_times': ingredients.count(mode(ingredients))},
@@ -27,18 +27,19 @@ def __report_values(client, orders, order_uri):
 def test_report_response(client, report_uri):
     response = client.get(report_uri)
     pytest.assume(response.status.startswith('200'))
-    pytest.assume(response['most_requested_ingredient'])
-    pytest.assume(response['most_requested_beverage'])
-    pytest.assume(response['month_major_revenue'])
-    pytest.assume(response['top_three_clients'])
+    piza_report = response.json
+    pytest.assume(piza_report['most_requested_ingredient'])
+    pytest.assume(piza_report['most_requested_beverage'])
+    pytest.assume(piza_report['month_major_revenue'])
+    pytest.assume(piza_report['top_three_clients'])
 
-def test_report_service(client, report_uri, create_report_orders, create_report):
-    response = create_report
+def test_report_service(client, report_uri, create_report_orders, order_uri):
+    response = client.get(report_uri)
     pytest.assume(response.status.startswith('200'))
-    report = __report_values(create_report_orders)
-    
-    pytest.assume(response['most_requested_ingredient']['name'] == report['most_requested_ingredient']['name'])
-    pytest.assume(response['most_requested_ingredient']['requested_times'] == report['most_requested_ingredient']['requested_times'])
-    pytest.assume(response['most_requested_beverage']['name'] == report['most_requested_beverage']['name'])
-    pytest.assume(response['most_requested_beverage']['requested_times'] == report['most_requested_beverage']['requested_times'])
-    
+    piza_report = response.json
+    orders = [order.json for order in create_report_orders]
+    report = __report_values(client, orders, order_uri)
+    pytest.assume(piza_report['most_requested_ingredient']['name'] == report['most_requested_ingredient']['name'])
+    pytest.assume(piza_report['most_requested_ingredient']['requested_times'] == report['most_requested_ingredient']['requested_times'])
+    pytest.assume(piza_report['most_requested_beverage']['name'] == report['most_requested_beverage']['name'])
+    pytest.assume(piza_report['most_requested_beverage']['requested_times'] == report['most_requested_beverage']['requested_times'])

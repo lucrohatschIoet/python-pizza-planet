@@ -51,7 +51,9 @@ def create_report_ingredients(client, ingredient_uri):
             'price': 0.5
         }
     ]
-    return [client.post(ingredient_uri, json=ingredient) for ingredient in ingredients]
+    creates = [client.post(ingredient_uri, json=ingredient) for ingredient in ingredients]
+    return creates
+
 
 @pytest.fixture
 def create_report_beverages(client, beverage_uri):
@@ -65,8 +67,9 @@ def create_report_beverages(client, beverage_uri):
             'price': 2
         }
     ]
-    return [client.post(beverage_uri, json=beverage) for beverage in beverages]
 
+    creates = [client.post(beverage_uri, json=beverage) for beverage in beverages]
+    return creates
     
 @pytest.fixture
 def create_report_sizes(client, size_uri):
@@ -76,21 +79,24 @@ def create_report_sizes(client, size_uri):
             'price': 1
         }
     ]
-    return [client.post(size_uri, json=size) for size in sizes]
+    creates = [client.post(size_uri, json=size) for size in sizes]
+    return creates
+
 
 @pytest.fixture
 def create_report_orders(client, order_uri, create_report_ingredients, create_report_beverages, create_report_sizes, create_report_client):
-    ingredients = [ingredient.get('_id') for ingredient in create_report_ingredients]
-    beverages = [beverage.get('_id') for beverage in create_report_beverages]
-    sizes = [size.get('_id') for size in create_report_sizes]
+    ingredients = [ingredient.json.get('_id') for ingredient in create_report_ingredients]
+    print(ingredients)
+    beverages = [beverage.json.get('_id') for beverage in create_report_beverages]
+    sizes = [size.json.get('_id') for size in create_report_sizes]
 
     orders = []
     for _ in range(10):
-        client = shuffle_list(create_report_client)[0]
+        order_client = shuffle_list(create_report_client)[0]
         new_order = client.post(order_uri, json={
-            **client,
+            **order_client,
             'ingredients': shuffle_list(ingredients)[2:3],
-            'beverages': shuffle_list(beverages)[0],
+            'beverages': [shuffle_list(beverages)[0]],
             'size_id': shuffle_list(sizes)[0]
         })
         orders.append(new_order)
