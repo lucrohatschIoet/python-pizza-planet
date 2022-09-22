@@ -118,3 +118,10 @@ python3 manage.py test
 ```bash
 python3 manage.py cover
 ```
+
+### Seeding DB
+To seed the database wiith fake information run
+
+```bash
+python3 manage.py seed
+```
