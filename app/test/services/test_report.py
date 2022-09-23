@@ -42,9 +42,8 @@ def test_report_service(client, report_uri, create_report_orders, order_uri):
     piza_report = response.json
     orders = [order.json for order in create_report_orders]
     report = __report_values(client, orders, order_uri)
-    print(piza_report['most_requested_ingredient']['name'])
-    print(report['most_requested_ingredient']['name'])
     pytest.assume(piza_report['most_requested_ingredient']['name'] == report['most_requested_ingredient']['name'])
     pytest.assume(piza_report['most_requested_ingredient']['requested_times'] == report['most_requested_ingredient']['requested_times'])
     pytest.assume(piza_report['most_requested_beverage']['name'] == report['most_requested_beverage']['name'])
     pytest.assume(piza_report['most_requested_beverage']['requested_times'] == report['most_requested_beverage']['requested_times'])
+    

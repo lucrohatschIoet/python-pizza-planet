@@ -1,7 +1,7 @@
 from typing import Any, List, Optional, Sequence
 
 from sqlalchemy.sql import text, column
-from sqlalchemy import func, desc
+from sqlalchemy import func, desc, extract
 
 from .models import Beverage, BeverageDetail, Ingredient, Order, OrderDetail, Size, db
 from .serializers import (IngredientSerializer, OrderDetailSerializer, OrderSerializer,
@@ -83,6 +83,21 @@ class OrderManager(BaseManager):
     def update(cls):
         raise NotImplementedError(f'Method not suported for {cls.__name__}')
 
+    @classmethod
+    def get_revenue_per_month(cls):
+        months_revenues = cls.session.query(extract("month", cls.model.date).label('month'), func.sum(cls.model.total_price).label('value')).group_by('month').order_by(desc('value')).all()
+        response = [
+            {'month': revenue.month, 'revenue': revenue.value}
+            for revenue in months_revenues]
+        return response
+    
+    @classmethod
+    def get_clients_order_ranking(cls):
+        clients_order_ranking = cls.session.query(cls.model.client_name.label('name'), cls.model.client_dni.label('dni'), func.count(cls.model._id).label('orders')).group_by('dni').order_by(desc('orders')).all()
+        response = [{'name': client.name, 'dni':client.dni, 'orders': client.orders}
+            for client in clients_order_ranking]
+        
+        return response
 
 class IndexManager(BaseManager):
 
