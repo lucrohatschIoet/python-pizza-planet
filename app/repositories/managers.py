@@ -1,9 +1,10 @@
 from typing import Any, List, Optional, Sequence
 
 from sqlalchemy.sql import text, column
+from sqlalchemy import func, desc
 
 from .models import Beverage, BeverageDetail, Ingredient, Order, OrderDetail, Size, db
-from .serializers import (IngredientSerializer, OrderSerializer,
+from .serializers import (IngredientSerializer, OrderDetailSerializer, OrderSerializer,
                           SizeSerializer, BeverageSerializer, ma)
 
 
@@ -88,3 +89,32 @@ class IndexManager(BaseManager):
     @classmethod
     def test_connection(cls):
         cls.session.query(column('1')).from_statement(text('SELECT 1')).all()
+
+class OrderDetailManager(BaseManager):
+    model = OrderDetail
+
+    @classmethod
+    def get_most_requestd(cls):
+        most_requested =  cls.session.query(
+            func.count(cls.model.ingredient_id).label('count'), 
+            Ingredient.name).join(Ingredient).group_by(
+                cls.model.ingredient_id
+                ).order_by(desc('count')).all()
+        result = [{'name': ingredient.name, 'requested_times': ingredient.count} for ingredient in most_requested]
+
+        return result
+
+
+class BeverageDetailManager(BaseManager):
+    model = BeverageDetail
+
+    @classmethod
+    def get_most_requestd(cls):
+        most_requested =  cls.session.query(
+            func.count(cls.model.beverage_id).label('count'), 
+            Beverage.name).join(Beverage).group_by(
+                cls.model.beverage_id
+                ).order_by(desc('count')).all()
+        result = [{'name': beverage.name, 'requested_times': beverage.count} 
+                for beverage in most_requested]
+        return result or []

@@ -86,7 +86,6 @@ def create_report_sizes(client, size_uri):
 @pytest.fixture
 def create_report_orders(client, order_uri, create_report_ingredients, create_report_beverages, create_report_sizes, create_report_client):
     ingredients = [ingredient.json.get('_id') for ingredient in create_report_ingredients]
-    print(ingredients)
     beverages = [beverage.json.get('_id') for beverage in create_report_beverages]
     sizes = [size.json.get('_id') for size in create_report_sizes]
 
