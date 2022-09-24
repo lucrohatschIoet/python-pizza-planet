@@ -64,3 +64,6 @@ def execute(n_clients:int, n_orders:int):
     seed_ingredients()
     seed_sizes()
     seed_orders(n_clients, n_orders)
+
+if __name__ == '__main__':
+    execute(10,100)
