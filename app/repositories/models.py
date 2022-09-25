@@ -14,8 +14,12 @@ class Order(db.Model):
     size_id = db.Column(db.Integer, db.ForeignKey('size._id'))
 
     size = db.relationship('Size', backref=db.backref('size'))
-    ingradient_detail = db.relationship('OrderDetail', backref=db.backref('order_detail'))
-    beverage_detail = db.relationship('BeverageDetail', backref=db.backref('beverage_detail'))
+    ingradient_detail = db.relationship(
+        'OrderDetail',
+        backref=db.backref('order_detail'))
+    beverage_detail = db.relationship(
+        'BeverageDetail',
+        backref=db.backref('beverage_detail'))
 
 
 class Ingredient(db.Model):
@@ -35,12 +39,16 @@ class OrderDetail(db.Model):
     ingredient_price = db.Column(db.Float)
     order_id = db.Column(db.Integer, db.ForeignKey('order._id'))
     ingredient_id = db.Column(db.Integer, db.ForeignKey('ingredient._id'))
-    ingredient = db.relationship('Ingredient', backref=db.backref('ingredient'))
+    ingredient = db.relationship(
+        'Ingredient',
+        backref=db.backref('ingredient'))
+
 
 class Beverage(db.Model):
     _id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
     price = db.Column(db.Float, nullable=False)
+
 
 class BeverageDetail(db.Model):
     _id = db.Column(db.Integer, primary_key=True)

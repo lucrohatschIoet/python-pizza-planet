@@ -21,10 +21,10 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
-      - name: Run tests
+      - name: Run linters
         run: |
-          python3 manage.py test
-      - name: Generate report
+          python3 manage.py linters
+      - name: Run test and Generate report
         run: |
           python3 manage.py cover
       - name: Coverage comment

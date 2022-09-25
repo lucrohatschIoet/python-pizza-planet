@@ -119,6 +119,13 @@ python3 manage.py test
 python3 manage.py cover
 ```
 
+### Run linters
+Don't forget to check linters befor commit,
+
+```bash
+python3 manage.py linters
+```
+
 ### Seeding DB
 To seed the database wiith fake information run
 
