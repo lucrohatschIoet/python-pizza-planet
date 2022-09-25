@@ -1,5 +1,5 @@
 
-
+import os
 import pytest
 from flask.cli import FlaskGroup
 from flask_migrate import Migrate
@@ -24,6 +24,10 @@ def test():
 @manager.command('cover', with_appcontext=False)
 def cover():
     return pytest.main(['--cov-config=.coveragerc', '--cov=app', 'app/test'])
+
+@manager.command('linters')
+def run_linters():
+    return os.system("flake8 app/")
 
 @manager.command('seed', with_appcontext=True)
 def seed():

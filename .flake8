@@ -1,0 +1,5 @@
+[flake8]
+exclude = 
+    app/test,
+    */__pycache__,
+    */__init__.py,
